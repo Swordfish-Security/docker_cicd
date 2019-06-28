@@ -1,0 +1,34 @@
+{
+  "summary": {
+    "fatal": 0,
+    "warn": 2,
+    "info": 1,
+    "pass": 14
+  },
+  "details": [
+    {
+      "code": "CIS-DI-0005",
+      "title": "Enable Content trust for Docker",
+      "level": "INFO",
+      "alerts": [
+        "export DOCKER_CONTENT_TRUST=1 before docker pull/build"
+      ]
+    },
+    {
+      "code": "CIS-DI-0006",
+      "title": "Add HEALTHCHECK instruction to the container image",
+      "level": "WARN",
+      "alerts": [
+        "not found HEALTHCHECK statement"
+      ]
+    },
+    {
+      "code": "DKL-DI-0006",
+      "title": "Avoid latest tag",
+      "level": "WARN",
+      "alerts": [
+        "Avoid 'latest' tag"
+      ]
+    }
+  ]
+}
