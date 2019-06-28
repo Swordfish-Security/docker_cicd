@@ -28,6 +28,7 @@ HadoLint (Dockerfile analysis):
     - ./hadolint-Linux-x86_64 -f json $DOCKERFILE > $ARTIFACT_FOLDER/hadolint_results.json || exit 0 
     
     artifacts:
+        when: always # return artifacts even after job failure        
         paths:
         - hadolint_results.json
 
@@ -45,6 +46,7 @@ Dockle (best practices):
     - docker run --rm -v $(pwd)/$DOCKERIMAGE:/$DOCKERIMAGE -v $ARTIFACT_FOLDER:/artifacts goodwithtech/dockle --exit-code 1 -f json --output /artifacts/dockle_results.json $DOCKERIMAGE    
     
     artifacts:
+        when: always # return artifacts even after job failure           
         paths:
         - dockle_results.json
 
@@ -69,6 +71,7 @@ Trivy (image CVE analysis):
     - ./trivy --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
         
     artifacts:
+        when: always # return artifacts even after job failure   
         paths:
         - trivy_results.json
 
