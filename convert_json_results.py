@@ -1,4 +1,5 @@
 import json
+import os
 from json2html import *
 
 
@@ -10,9 +11,12 @@ def transformer(input_json):
 def read_json(file):
     """ getting json from the file """
     if file:
-        with open(file, 'r') as f:
-            data = json.load(f)
-        return data
+        if os.path.getsize(file) > 0:
+            with open(file, 'r') as f:
+                data = json.load(f)
+            return data
+        else:
+            raise Exception('The input JSON file is empty')
 
 
 def write_html(file, data):
@@ -79,6 +83,11 @@ def main():
         write_html('results.html', data)
 
         print('[+] Clean exit ' + '=' * 60)
+
+    except Exception as exception_message:
+        print('[-] Something went wrong: %s' % exception_message)
+
+    
     except KeyboardInterrupt:
         print('[X] Exiting ...')
 
