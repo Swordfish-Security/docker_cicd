@@ -1,13 +1,13 @@
 #!/bin/bash
 export DOCKERFILE="mydockerfile.df"
-export DOCKERIMAGE="cloudinsky/cve-2017-5638"
+export DOCKERIMAGE=" knqyf263/cve-2018-11235"
 export SHOWSTOPPER_PRIORITY="CRITICAL"
 export TRIVYCACHE=".trivy_cache"
 export ARTIFACT_FOLDER="json"
 
 # installing all necessary stuff
 sudo apt-get update
-sudo apt-get install -y python3 python3-pip docker.io
+sudo apt-get install -y python3 python3-pip docker.io rpm git
 
 # preparing directory structure
 mkdir docker_tools

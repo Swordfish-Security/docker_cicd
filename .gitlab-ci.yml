@@ -1,8 +1,8 @@
 variables:
     DOCKER_HOST: "tcp://docker:2375/"
     DOCKERFILE: "mydockerfile.df" # name of the Dockerfile to analyse    
-    # DOCKERIMAGE: "bkimminich/juice-shop" # name of the Docker image to analyse
-    DOCKERIMAGE: "cloudinsky/cve-2017-5638" # test Docker image with several CRITICAL CVE 
+    DOCKERIMAGE: "bkimminich/juice-shop" # name of the Docker image to analyse
+    # DOCKERIMAGE: "knqyf263/cve-2018-11235" # test Docker image with several CRITICAL CVE 
     SHOWSTOPPER_PRIORITY: "CRITICAL" # what level of criticality will fail Trivy job
     TRIVYCACHE: "$CI_PROJECT_DIR/.cache" # where to cache Trivy database of vulnerabilities for faster reuse
     ARTIFACT_FOLDER: "$CI_PROJECT_DIR"
@@ -10,12 +10,15 @@ variables:
 services:
     - docker:dind # to be able to build docker images inside the Runner
 
-HadoLint (Dockerfile analysis):
-    # Basic lint analysis of Dockerfile instructions
-    image: docker:git
+stages:
+    - scan
+    - report
+    - publish
 
-    tags:
-    - docker
+HadoLint:
+    # Basic lint analysis of Dockerfile instructions
+    stage: scan
+    image: docker:git
 
     after_script:
     - cat $ARTIFACT_FOLDER/hadolint_results.json
@@ -26,55 +29,70 @@ HadoLint (Dockerfile analysis):
     
     # NB: hadolint will always exit with 0 exit code
     - ./hadolint-Linux-x86_64 -f json $DOCKERFILE > $ARTIFACT_FOLDER/hadolint_results.json || exit 0 
-    
+
     artifacts:
         when: always # return artifacts even after job failure        
         paths:
-        - hadolint_results.json
+        - $ARTIFACT_FOLDER/hadolint_results.json
 
-Dockle (best practices):
+Dockle:
     # Analysing best practices about docker image (users permissions, instructions followed when image was built, etc.)
+    stage: scan    
     image: docker:git
-
-    tags:
-    - docker
 
     after_script:
     - cat $ARTIFACT_FOLDER/dockle_results.json
 
     script:
-    - docker run --rm -v $(pwd)/$DOCKERIMAGE:/$DOCKERIMAGE -v $ARTIFACT_FOLDER:/artifacts goodwithtech/dockle --exit-code 1 -f json --output /artifacts/dockle_results.json $DOCKERIMAGE    
+    - export VERSION=$(wget -q -O - https://api.github.com/repos/goodwithtech/dockle/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+    - wget https://github.com/goodwithtech/dockle/releases/download/v${VERSION}/dockle_${VERSION}_Linux-64bit.tar.gz && tar zxf dockle_${VERSION}_Linux-64bit.tar.gz
+    - ./dockle --exit-code 1 -f json --output $ARTIFACT_FOLDER/dockle_results.json $DOCKERIMAGE    
     
     artifacts:
-        when: always # return artifacts even after job failure           
+        when: always # return artifacts even after job failure        
         paths:
-        - dockle_results.json
+        - $ARTIFACT_FOLDER/dockle_results.json
 
-Trivy (image CVE analysis):
+Trivy:
     # Analysing docker image and package dependencies against several CVE bases
+    stage: scan    
     image: docker:git
-
-    tags:
-    - docker
 
     script:
     # getting the latest Trivy
+    - apk add rpm
     - export VERSION=$(wget -q -O - https://api.github.com/repos/knqyf263/trivy/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-    - wget https://github.com/knqyf263/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
-    - tar zxf trivy_${VERSION}_Linux-64bit.tar.gz
+    - wget https://github.com/knqyf263/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz && tar zxf trivy_${VERSION}_Linux-64bit.tar.gz
     
     # displaying all vulnerabilities w/o failing the build
-    - ./trivy --auto-refresh --clear-cache --cache-dir $TRIVYCACHE -f json -o $ARTIFACT_FOLDER/trivy_results.json --exit-code 0 --quiet $DOCKERIMAGE
+    - ./trivy -d --auto-refresh --clear-cache --cache-dir $TRIVYCACHE -f json -o $ARTIFACT_FOLDER/trivy_results.json --exit-code 0 --quiet $DOCKERIMAGE
     - cat $ARTIFACT_FOLDER/trivy_results.json
 
     # failing the build if the SHOWSTOPPER priority is found
-    - ./trivy --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
+    - ./trivy -d --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
         
     artifacts:
-        when: always # return artifacts even after job failure   
+        when: always # return artifacts even after job failure
         paths:
-        - trivy_results.json
+        - $ARTIFACT_FOLDER/trivy_results.json
 
     cache:
         paths:
         - .cache
+
+Report:
+    # combining tools outputs into one HTML
+    stage: report
+    when: always
+    image: python:3.5
+    
+    script:
+    - mkdir json
+    - cp $ARTIFACT_FOLDER/*.json ./json/
+    - pip install json2html
+    - wget https://raw.githubusercontent.com/shad0wrunner/docker_cicd/master/convert_json_results.py
+    - python ./convert_json_results.py
+    
+    artifacts:
+        paths:
+        - results.html
