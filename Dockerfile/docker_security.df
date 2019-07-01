@@ -1,0 +1,6 @@
+FROM debian
+VOLUME ["/results"]
+COPY tools_install.sh tools_install.sh
+COPY entrypoint.sh /entrypoint.sh 
+RUN chmod +x tools_install.sh entrypoint.sh && ./tools_install.sh
+ENTRYPOINT ["/entrypoint.sh"]
