@@ -1,8 +1,8 @@
-## This Dockerfile builds an image that will scan a supplied Dockerfile and a Docker image from Docker repository
+## This Dockerfile builds an image that will scan a supplied Dockerfile and a Docker image from the tar file exported from the repository
 
 FROM debian
 VOLUME ["/results"]
 COPY tools_install.sh tools_install.sh
 COPY entrypoint.sh /entrypoint.sh 
 RUN chmod +x tools_install.sh entrypoint.sh && ./tools_install.sh
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint_tar.sh"]

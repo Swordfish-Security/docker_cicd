@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "[+] Setting environment variables"
-export DOCKERFILE="mydockerfile.df"
+export DOCKERFILE="Dockerfile"
 export DOCKERIMAGE=" knqyf263/cve-2018-11235"
 export SHOWSTOPPER_PRIORITY="CRITICAL"
 export TRIVYCACHE=".trivy_cache"

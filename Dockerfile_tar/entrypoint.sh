@@ -13,12 +13,12 @@ echo "[+] Running Hadolint"
 
 # Dockle
 echo "[+] Running Dockle"
-./dockle --exit-code 1 -f json --output $ARTIFACT_FOLDER/dockle_results.json $DOCKERIMAGE
+./dockle --exit-code 1 -f json --output $ARTIFACT_FOLDER/dockle_results.json --input /$DOCKERIMAGE
 
 # Trivy
 echo "[+] Running Trivy"
-./trivy --auto-refresh --clear-cache --cache-dir $TRIVYCACHE -f json -o $ARTIFACT_FOLDER/trivy_results.json --exit-code 0 --quiet $DOCKERIMAGE
-./trivy --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
+./trivy --auto-refresh --clear-cache --cache-dir $TRIVYCACHE -f json -o $ARTIFACT_FOLDER/trivy_results.json --exit-code 0 --quiet --input /$DOCKERIMAGE
+./trivy --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet --input /$DOCKERIMAGE
 
 # HTML results from all tools outputs
 echo "[+] Making the output look pretty"
