@@ -1,3 +1,5 @@
+Author: Pavel Kann (shad0wrunner)
+
 # Docker CI/CD security analysis
 Integrating Docker scanning tools into CI/CD
 
