@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Make sure Docker is installed and current user is a member of docker group ($groups)
+# sudo apt-get install docker.io && sudo usermod -a -G docker $(whoami)
+#
 echo "[+] Setting environment variables"
 export DOCKERFILE="Dockerfile"
 export DOCKERIMAGE="bkimminich/juice-shop"
@@ -9,7 +13,7 @@ export ARTIFACT_FOLDER="json"
 # installing all necessary stuff
 echo "[+] Installing required packages"
 sudo apt-get update
-sudo apt-get install -y python3 python3-pip docker.io rpm git
+sudo apt-get install -y python3 python3-pip rpm git
 
 # preparing directory structure
 echo "[+] Preparing necessary directories"
