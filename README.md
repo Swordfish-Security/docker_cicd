@@ -58,5 +58,6 @@ $ mkdir results
 $ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -v $(pwd)/image_to_scan.tar:/image_to_scan.tar -e DOCKERIMAGE="image_to_scan.tar" dscan:tar_file
 ```
 
+When the scanning is done you can find raw json results and humanified HTML results file in ./results folder.  
 
-I would recommend rebuilding the image on a daily basis because CVE bases in Trivy are updated every now and then and running image will take less time because Trivy will not fetch the new data (3+ Gb) each time.
+I would recommend rebuilding the docker image on a daily basis in a non-peak time to fetch Trivy databases. This is because CVE bases in Trivy are updated every now and then and running image will take less time as Trivy will not fetch the complete data (3+ Gb) each time you run a scan.
