@@ -11,16 +11,18 @@ The set of tools consists of
 * Small Python script to combine all tools output in json and make a simple HTML report
 
 The pack comes in three flavours:
-1. GitLab CI/CD configuration YAML
-2. sh-script to install and run all tools on a dedicated host (VM or whatever you like)
-2.1. Make sure you have Docker installed and current user is in docker group
+**GitLab CI/CD configuration YAML**
+You can import the YAML file into your test project, download sample Dockerfile and try the integration process.
+
+**sh-script to install and run all tools on a dedicated host (VM or whatever you like)**
+First, make sure you have Docker installed and current user is in docker group
 ```
 $ sudo apt-get install -y docker.io
 $ sudo usermod -a -G docker $(whoami)
 ```
   Then reconnect the terminal session.
 
-3. Dockerfile to build a Docker container with all the tools
+**Dockerfile to build a Docker container with all the tools**
 
   Input includes a Dockerfile and the name of the image to scan
   Output is results.html report, containing all findings from all 3 tools
@@ -47,4 +49,6 @@ $ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_securit
 $ mkdir results
 $ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -v $(pwd)/image_to_scan.tar:/image_to_scan.tar -e DOCKERIMAGE="image_to_scan.tar" dscan:tar_file
 ```
+
+
 I would recommend rebuilding the image on a daily basis because CVE bases in Trivy are updated every now and then and running image will take less time because Trivy will not fetch the new data (3+ Gb) each time.
