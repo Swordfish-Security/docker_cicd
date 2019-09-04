@@ -10,50 +10,48 @@ The set of tools consists of
 * Trivy (https://github.com/knqyf263/trivy/) - Light-weight CVE analyser for Docker images and dependencies
 * Small Python script to combine all tools output in json and make a simple HTML report
 
-The pack comes in three flavours:
+The pack comes in three flavours:  
 ## GitLab CI/CD configuration YAML
 
-Purpose: to integrate Docker security tools into CI/CD process via GitLab
+Purpose: to integrate Docker security tools into CI/CD process via GitLab  
 You can import the YAML file into your test project, download sample Dockerfile and try the integration process.
 
 ## sh-script 
 
-Purpose: to install and run all tools on a dedicated host (VM or whatever you like) via simple shell script
-
+Purpose: to install and run all tools on a dedicated host (VM or whatever you like) via simple shell script  
 First, make sure you have Docker installed and current user is in docker group
 ```
 $ sudo apt-get install -y docker.io
 $ sudo usermod -a -G docker $(whoami)
 ```
-  Then reconnect the terminal session.
+Then reconnect the terminal session.
 
 ## Dockerfiles 
 
-  Purpose: to build a Docker container with all the tools
+Purpose: to build a Docker container with all the tools
 
-  Input includes a Dockerfile and the name of the image to scan
-  Output is results.html report, containing all findings from all 3 tools
+Input includes a Dockerfile and the name of the image to scan  
+Output is results.html report, containing all findings from all 3 tools
 
-  You can build Docker images for scanning using the following commands (tagged as "image"):
+You can build Docker images for scanning using the following commands (tagged as "image"):
 ```
 $ cd Dockerfile
 $ docker build -t dscan:image -f docker_security.df .
 ```
-  or if you would need to scan exported images in .tar form use another Dockerfile (tagged as "tar_file"):
+or if you would need to scan exported images in .tar form use another Dockerfile (tagged as "tar_file"):
 ```
 $ cd Dockerfile_tar
 $ docker build -t dscan:tar_file -f docker_security_tar.df .
 ```
 
-  After building images of the scanning tools you can run the scan like this:
-
-  Substitute $(pwd)/Dockerfile/docker_security.df for the path to your Dockerfile to scan and specify the image:tag you want to scan in DOCKERIMAGE variable
+After building images of the scanning tools you can run the scan like this:  
+! Substitute $(pwd)/Dockerfile/docker_security.df for the absolute path to your Dockerfile to scan and specify the image:tag you want to scan in DOCKERIMAGE variable
 ```
 clone the repo and cd into it
 $ mkdir results
 $ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -e DOCKERIMAGE="python:3.5" dscan:image
 ```
-  or if you would need to scan exported images in .tar form - use an image tagged as "tar_file":
+or if you would need to scan exported images in .tar form - use an image tagged as "tar_file":
 ```
 clone the repo and cd into it
 $ mkdir results
