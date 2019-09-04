@@ -14,6 +14,12 @@ The pack comes in three flavours:
 1. GitLab CI/CD configuration YAML
 [In progress] 2. sh-script to install and run all tools on a dedicated host (VM or whatever you like)
 2.1. Make sure you have Docker installed and current user is in docker group
+```
+$ sudo apt-get install -y docker.io
+$ sudo usermod -a -G docker $(whoami)
+```
+Then reconnect the terminal session.
+
 [In progress] 3. Dockerfile to build a Docker container with all the tools
 
 Input includes a Dockerfile and the name of the image to scan
