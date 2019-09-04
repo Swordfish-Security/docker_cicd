@@ -22,9 +22,12 @@ cd docker_tools
 mkdir $TRIVYCACHE
 mkdir $ARTIFACT_FOLDER
 
-# fetching sample Dockerfile
+# fetching sample Dockerfile and image
 echo "[+] Fetching sample Dockerfile"
 wget -O $DOCKERFILE https://raw.githubusercontent.com/shad0wrunner/docker_cicd/master/mydockerfile.df
+
+echo "[+] Pulling image to scan"
+docker pull $DOCKERIMAGE
 
 # Hadolint
 echo "[+] Running Hadolint"
