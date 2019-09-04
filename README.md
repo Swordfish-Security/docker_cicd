@@ -34,24 +34,24 @@ $ sudo usermod -a -G docker $(whoami)
   Input includes a Dockerfile and the name of the image to scan
   Output is results.html report, containing all findings from all 3 tools
 
-  You can build Docker images using the following commands:
+  You can build Docker images for scanning using the following commands (tagged as "image"):
 ```
 $ cd Dockerfile
 $ docker build -t dscan:image -f docker_security.df .
 ```
-  or if you would need to scan exported images in .tar form use another Dockerfile:
+  or if you would need to scan exported images in .tar form use another Dockerfile (tagged as "tar_file"):
 ```
 $ cd Dockerfile_tar
 $ docker build -t dscan:tar_file -f docker_security_tar.df .
 ```
 
-  After building an image you can run the scan like this:
-  Substitute $(pwd)/Dockerfile/docker_security.df for the path to your Dockerfile to scan and specify the image and the tag you want to scan in DOCKERIMAGE variable
+  After building images of the scanning tools you can run the scan like this:
+  Substitute $(pwd)/Dockerfile/docker_security.df for the path to your Dockerfile to scan and specify the image:tag you want to scan in DOCKERIMAGE variable
 ```
 $ mkdir results
 $ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -e DOCKERIMAGE="python:3.5" dscan:image
 ```
-  or if you would need to scan exported images in .tar form:
+  or if you would need to scan exported images in .tar form - use an image tagged as "tar_file":
 ```
 $ mkdir results
 $ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -v $(pwd)/image_to_scan.tar:/image_to_scan.tar -e DOCKERIMAGE="image_to_scan.tar" dscan:tar_file
