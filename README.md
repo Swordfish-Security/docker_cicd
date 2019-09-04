@@ -11,10 +11,15 @@ The set of tools consists of
 * Small Python script to combine all tools output in json and make a simple HTML report
 
 The pack comes in three flavours:
-**GitLab CI/CD configuration YAML**
+## GitLab CI/CD configuration YAML
+
+Purpose: to integrate Docker security tools into CI/CD process via GitLab
 You can import the YAML file into your test project, download sample Dockerfile and try the integration process.
 
-**sh-script to install and run all tools on a dedicated host (VM or whatever you like)**
+## sh-script 
+
+Purpose: to install and run all tools on a dedicated host (VM or whatever you like) via simple shell script
+
 First, make sure you have Docker installed and current user is in docker group
 ```
 $ sudo apt-get install -y docker.io
@@ -22,7 +27,9 @@ $ sudo usermod -a -G docker $(whoami)
 ```
   Then reconnect the terminal session.
 
-**Dockerfile to build a Docker container with all the tools**
+## Dockerfiles 
+
+  Purpose: to build a Docker container with all the tools
 
   Input includes a Dockerfile and the name of the image to scan
   Output is results.html report, containing all findings from all 3 tools
