@@ -2,7 +2,10 @@
 Integrating Docker scanning tools into CI/CD
 
 This repository contains different approaches to utilize a set of tools for scanning various aspects of Docker security.
-The pack could be integrated with different CI/CD procedures.
+The pack could be integrated with different CI/CD procedures.  
+
+This repository is meant to provide support for the article on the tools integration:  
+https://swordfishsecurity.ru/docker-security-scanning-examples/en  
 
 The set of tools consists of 
 * Hadolint (https://github.com/hadolint/hadolint) - Dockerfile linter
