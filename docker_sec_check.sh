@@ -24,7 +24,7 @@ mkdir $ARTIFACT_FOLDER
 
 # fetching sample Dockerfile and image
 echo "[+] Fetching sample Dockerfile"
-wget -O $DOCKERFILE https://raw.githubusercontent.com/shad0wrunner/docker_cicd/master/mydockerfile.df
+wget -O $DOCKERFILE https://raw.githubusercontent.com/Swordfish-Security/docker_cicd/master/mydockerfile.df
 
 echo "[+] Pulling image to scan"
 docker pull $DOCKERIMAGE
@@ -56,7 +56,7 @@ rm *.tar.gz LICENSE README.md
 # HTML results from all tools outputs
 echo "[+] Making the output look pretty"
 pip3 install json2html
-wget -nv --no-cache -O convert_json_results.py https://raw.githubusercontent.com/shad0wrunner/docker_cicd/master/convert_json_results.py
+wget -nv --no-cache -O convert_json_results.py https://raw.githubusercontent.com/Swordfish-Security/docker_cicd/master/convert_json_results.py
 python3 ./convert_json_results.py
 
 # Collect the results in docker_tools/results.html
