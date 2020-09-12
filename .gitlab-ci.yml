@@ -69,7 +69,7 @@ Trivy:
     - cat $ARTIFACT_FOLDER/trivy_results.json
 
     # failing the build if the SHOWSTOPPER priority is found
-    - ./trivy -d --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
+    - ./trivy -d --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 -f json -o $ARTIFACT_FOLDER/trivy_results.json --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
         
     artifacts:
         when: always # return artifacts even after job failure
