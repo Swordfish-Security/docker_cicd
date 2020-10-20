@@ -11,14 +11,26 @@ mkdir $ARTIFACT_FOLDER
 echo "[+] Running Hadolint"
 ./hadolint-Linux-x86_64 -f json /Dockerfile > $ARTIFACT_FOLDER/hadolint_results.json
 
+# show results
+./hadolint-Linux-x86_64 /Dockerfile
+
 # Dockle
 echo "[+] Running Dockle"
 ./dockle --exit-code 1 -f json --output $ARTIFACT_FOLDER/dockle_results.json $DOCKERIMAGE
 
+# show results
+./dockle $DOCKERIMAGE
+
 # Trivy
 echo "[+] Running Trivy"
-./trivy --auto-refresh --clear-cache --cache-dir $TRIVYCACHE -f json -o $ARTIFACT_FOLDER/trivy_results.json --exit-code 0 --quiet $DOCKERIMAGE
-./trivy --auto-refresh --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
+# writing finding into json file
+./trivy --cache-dir $TRIVYCACHE -f json -o $ARTIFACT_FOLDER/trivy_results.json --exit-code 0 --quiet $DOCKERIMAGE
+
+# just a neat output instead of pure json
+./trivy --cache-dir $TRIVYCACHE --exit-code 0 $DOCKERIMAGE
+
+# fail build if there is at least 1 vulnerability of the defined severity
+./trivy -d --cache-dir $TRIVYCACHE --exit-code 1 --severity $SHOWSTOPPER_PRIORITY --quiet $DOCKERIMAGE
 
 # HTML results from all tools outputs
 echo "[+] Making the output look pretty"
