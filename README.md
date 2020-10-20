@@ -40,18 +40,18 @@ After you clone the repo and cd into it you can build Docker images for scanning
 or if you would need to scan exported images in .tar form use another Dockerfile (tagged as "tar_file"):
 ```
 ~/docker_cicd$ cd Dockerfile_tar
-./Dockerfile$ docker build -t dscan:tar_file -f docker_security.df .
+./Dockerfile$ docker build -t dscan:tar_file -f docker_security_tar.df .
 ./Dockerfile$ cd ..
 ```
 
 After building images of the scanning tools you can run the scan like this:  
 ! Substitute $(pwd)/Dockerfile/docker_security.df for the absolute path to your Dockerfile to scan and specify the image:tag you want to scan in DOCKERIMAGE variable
 ```
-~/docker_cicd$ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -e DOCKERIMAGE="python:3.5" dscan:image
+~/docker_cicd$ docker run --rm -v $(pwd)/results:/results -v $(pwd)/docker_security.df:/Dockerfile -e DOCKERIMAGE="bkimminich/juice-shop" dscan:image
 ```
 or if you would need to scan exported images in .tar form - use an image tagged as "tar_file":
 ```
-~/docker_cicd$ docker run --rm -v $(pwd)/results:/results -v $(pwd)/Dockerfile/docker_security.df:/Dockerfile -v $(pwd)/image_to_scan.tar:/image_to_scan.tar -e DOCKERIMAGE="image_to_scan.tar" dscan:tar_file
+~/docker_cicd$ docker run --rm -v $(pwd)/results:/results -v $(pwd)/docker_security_tar.df:/Dockerfile -v $(pwd)/image_to_scan.tar:/image_to_scan.tar -e DOCKERIMAGE="image_to_scan.tar" dscan:tar_file
 ```
 
 When the scanning is done you can find raw json results and humanified HTML results file in ./results folder.  
