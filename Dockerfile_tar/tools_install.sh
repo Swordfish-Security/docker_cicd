@@ -1,5 +1,6 @@
 #!/bin/bash
 export TRIVYCACHE="/.trivy_cache"
+export ARTIFACT_FOLDER="./json"
 
 # installing all necessary stuff
 echo "[+] Installing required packages"
@@ -28,9 +29,6 @@ echo "[+] Fetching Trivy"
 export VERSION=$(wget -q -O - https://api.github.com/repos/knqyf263/trivy/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
 wget -nv --no-cache https://github.com/knqyf263/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz -O trivy_Linux-64bit.tar.gz && tar zxf trivy_Linux-64bit.tar.gz
 
-echo "[+] Fetching Trivy DB"
-./trivy --refresh -q --cache-dir $TRIVYCACHE
-
 # cleaning up
 echo "[+] Removing left-overs"
 rm *.tar.gz LICENSE README.md 
@@ -38,6 +36,6 @@ rm *.tar.gz LICENSE README.md
 # json converting script
 echo "[+] Fetching json2HTML"
 pip3 install json2html
-wget -nv --no-cache -O convert_json_results.py https://raw.githubusercontent.com/shad0wrunner/docker_cicd/master/convert_json_results.py
+wget -nv --no-cache -O convert_json_results.py https://raw.githubusercontent.com/Swordfish-Security/docker_cicd/master/convert_json_results.py
 
 echo "[+] Image has been built"
