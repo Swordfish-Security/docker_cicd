@@ -1,5 +1,6 @@
 #!/bin/bash
 export TRIVYCACHE="/.trivy_cache"
+export $ARTIFACT_FOLDER="./json"
 
 # installing all necessary stuff
 echo "[+] Installing required packages"
